@@ -44,6 +44,17 @@ namespace SolrCsvSpike
             return new SetSizePerfResult {SetSize = setSize, XmlTime = xmlTime, CsvTime = csvTime, JsonTime = jsonTime};
         }
 
+        public IEnumerable<SetSizePerfResult> RunTestFor(int[] setSizes)
+        {
+            var results = new List<SetSizePerfResult>();
+
+            foreach (var setSize in setSizes)
+            {
+                results.Add(RunSpikeFor(setSize));
+            }
+            return results;
+        }
+
         public static void ClearSolrAndAllowToProcess()
         {
             Solr.Reset();

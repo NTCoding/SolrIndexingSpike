@@ -14,55 +14,52 @@ namespace SolrCsvSpike
     [TestFixture]
     public class TestConsole
     {
-        private SolrPerfTester runner;
+        private SolrPerfTester _runner;
 
         [TestFixtureSetUp]
         public void SetUp()
         {
-            runner = new SolrPerfTester();
+            _runner = new SolrPerfTester();
         }
-       
 
         [Test]
         public void Test_50_Tracks()
         {
-            
+            var setSizes = Enumerable.Repeat(50, 10).ToArray();
+
+            var results = _runner.RunTestFor(setSizes);
+
+            Display(results);
         }
 
         [Test]
         public void Test_500_Tracks()
         {
-            
+            var setSizes = Enumerable.Repeat(500, 10).ToArray();
+
+            var results = _runner.RunTestFor(setSizes);
+
+            Display(results);
         }
 
         [Test]
         public void Test_1000_Tracks()
         {
-            
+            var setSizes = Enumerable.Repeat(1000, 10).ToArray();
+
+            var results = _runner.RunTestFor(setSizes);
+
+            Display(results);
         }
 
         [Test]
         public void Test_2000_Tracks()
         {
-            
-        }
+            var setSizes = Enumerable.Repeat(2000, 10).ToArray();
 
-       
-
-        [Test]
-        public void PerfTest()
-        {
-            var setSizes = new[] {10};
-            
-            var results = new List<SetSizePerfResult>();
-         
-            foreach (var setSize in setSizes)
-            {
-                results.Add(runner.RunSpikeFor(setSize));
-            }
+            var results = _runner.RunTestFor(setSizes);
 
             Display(results);
-
         }
 
         private void Display(IEnumerable<SetSizePerfResult> results)
@@ -89,7 +86,7 @@ namespace SolrCsvSpike
         //    Console.Write(result.Body);
         //}
 
-        //[Test]
+        //[RunTestFor]
         //public void RemoteCsv()
         //{
         //    var sizes = new[] {1,2,3,4,5,6,7,8,9,10};
@@ -131,7 +128,7 @@ namespace SolrCsvSpike
         //    }
         //}
 
-        //[Test]
+        //[RunTestFor]
         //public void GetCsv()
         //{
         //    var tracks = runner.GetTracks(100000);

@@ -70,74 +70,38 @@ namespace SolrCsvSpike
             {
                 Console.WriteLine("||       {0}       ||      {1}      ||     {2}     ||     {3}     ||", r.SetSize, r.XmlTime, r.CsvTime, r.JsonTime);
             }
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("*************************************************");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Averages: Xml = {0}   Csv = {1}   Json = {2}", 
+                results.Average(r => r.XmlTime), results.Average(r => r.CsvTime), results.Average(r => r.JsonTime));
+
+            Console.WriteLine();
+            Console.WriteLine("Medians: Xml = {0} Csv = {1} Json = {2}", 
+                GetMedian(results.Select(r => r.XmlTime)), GetMedian(results.Select(r => r.CsvTime)), GetMedian(results.Select(r => r.JsonTime)));
+
+            Console.WriteLine();
+            Console.WriteLine("*************************************************");
         }
 
-        //private static void Display(ResponseInfo result)
-        //{
-        //    Console.WriteLine("Time: " + result.Time);
-
-        //    Console.WriteLine();
-        //    Console.WriteLine();
-        //    Console.WriteLine("****************************");
-        //    Console.WriteLine();
-        //    Console.WriteLine();
-        //    Console.WriteLine("Response: ");
-        //    Console.WriteLine();
-        //    Console.Write(result.Body);
-        //}
-
-        //[RunTestFor]
-        //public void RemoteCsv()
-        //{
-        //    var sizes = new[] {1,2,3,4,5,6,7,8,9,10};
-
-        //    var results = new List<ResponseInfo>();
-        //    foreach (var size in sizes)
-        //    {
-        //        var result = runner.RunRemoteCsvUpdate("/usr/local/tomcat/data/solr/track-aat/blah.csv");
-
-        //        results.Add(result);
-
-        //        SolrPerfTester.ClearSolrAndAllowToProcess();
-        //    }
-
-        //    Display(results);
-
-        //    runner.RunRemoteCsvUpdate("/usr/local/tomcat/data/solr/track-aat/blah.csv");
-
-        //private static void Display(List<ResponseInfo> results)
-        //{
-        //    foreach (var r in results)
-        //    {
-        //        Console.WriteLine("Time: " + r.Time);
-        //    }
-
-        //    Console.WriteLine();
-        //    Console.WriteLine();
-        //    Console.WriteLine();
-        //    Console.WriteLine("Average: " + results.Average(r => r.Time));
-
-        //    Console.WriteLine();
-        //    Console.WriteLine();
-        //    Console.WriteLine();
-
-        //    foreach (var responseInfo in results)
-        //    {
-        //        Console.WriteLine(responseInfo.Body);
-        //        Console.WriteLine();
-        //    }
-        //}
-
-        //[RunTestFor]
-        //public void GetCsv()
-        //{
-        //    var tracks = runner.GetTracks(100000);
-        //    var csv = runner.ConvertToCsv(tracks);
-
-        //    using (var w = new StreamWriter(new FileStream(@"C:\Users\nickt\Desktop\blah.csv.txt", FileMode.Create)))
-        //    {
-        //        w.Write(csv);
-        //    }
-        //}
+        private double GetMedian(IEnumerable<double> numbers)
+        {
+            int numberCount = numbers.Count();
+            int halfIndex = numbers.Count() / 2;
+            var sortedNumbers = numbers.OrderBy(n => n);
+            
+            if ((numberCount % 2) == 0)
+            {
+                return ((sortedNumbers.ElementAt(halfIndex) +
+                    sortedNumbers.ElementAt((halfIndex - 1))) / 2);
+            }
+            else
+            {
+                return sortedNumbers.ElementAt(halfIndex);
+            } 
+        }
     }
 }

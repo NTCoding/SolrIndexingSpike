@@ -63,10 +63,8 @@ namespace SolrCsvSpike
         {
             for (int i = 0; i < setSize; i++)
             {
-                var t = @"
-                            Shootout is at high-noon. Everybody knows Xml is going to lose...
-                            But who will win... Csv or Json?
-                         ";
+                var t = "Shootout is at high-noon. Everybody knows Xml is going to lose..."
+                       + "But who will win... Csv or Json?";
 
                 yield return new Track
                                  {

@@ -37,19 +37,28 @@ namespace SolrCsvSpike
 
             ClearSolrAndAllowToProcess();
 
-            var xmlTime = Solr.GetResponseAndDuration(xmlRequest).Time;
-
-            ClearSolrAndAllowToProcess();
-            
-            var csvTime = Solr.GetResponseAndDuration(csvRequest).Time;
+            var xmlResult = Solr.GetResponseAndDuration(xmlRequest);
 
             ClearSolrAndAllowToProcess();
 
-            var jsonTime = Solr.GetResponseAndDuration(jsonRequest).Time;
+            var csvResult = Solr.GetResponseAndDuration(csvRequest);
+
+            ClearSolrAndAllowToProcess();
+
+            var jsonResult = Solr.GetResponseAndDuration(jsonRequest);
 
             ClearSolrAndAllowToProcess();
         
-            return new SetSizePerfResult {SetSize = setSize, XmlTime = xmlTime, CsvTime = csvTime, JsonTime = jsonTime};
+            return new SetSizePerfResult
+                       {
+                           SetSize = setSize, 
+                           XmlRTTime = xmlResult.RTTime, 
+                           XmlQTime =  xmlResult.QTime,
+                           CsvRTTime = csvResult.RTTime, 
+                           CsvQTime =  csvResult.QTime,
+                           JsonRTTime = jsonResult.RTTime,
+                           JsonQTime = jsonResult.QTime
+                       };
         }
 
         public static void ClearSolrAndAllowToProcess()
@@ -93,25 +102,34 @@ namespace SolrCsvSpike
 
     public class ResponseInfo
     {
-        public long Time { get; set; }
+        public ResponseInfo(long rtTime, double qTime, string body)
+        {
+            RTTime = rtTime;
+            QTime = qTime;
+            Body = body;
+        }
+
+        public long RTTime { get; set; }
 
         public string Body { get; set; }
 
-        public ResponseInfo(long time, string body)
-        {
-            Time = time;
-            Body = body;
-        }
+        public double QTime { get; set; }
     }
 
     public class SetSizePerfResult
     {
         public int SetSize { get; set; }
 
-        public double CsvTime { get; set; }
+        public double XmlRTTime { get; set; }
 
-        public double XmlTime { get; set; }
+        public double XmlQTime { get; set; }
 
-        public double JsonTime { get; set; }
+        public double CsvRTTime { get; set; }
+
+        public double CsvQTime { get; set; }
+
+        public double JsonRTTime { get; set; }
+
+        public double JsonQTime { get; set; }
     }
 }

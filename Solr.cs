@@ -38,7 +38,7 @@ namespace SolrCsvSpike
 
         public static HttpWebRequest GetCsvRequest(string csv)
         {
-            var request = GetUpdateRequest("text/plain", @"http://systest-solr-slave00.nix.sys.7d:8080/solr/track-aat/update/csv?commit=true");
+            var request = GetUpdateRequest("text/plain", SolrUrls.UpdateCsvUrl);
 
             SetRequestBody(csv, request);
 
@@ -47,14 +47,14 @@ namespace SolrCsvSpike
 
         public static HttpWebRequest GetJsonRequest(string json)
         {
-            var request = GetUpdateRequest("application/json", "http://systest-solr-slave00.nix.sys.7d:8080/solr/track-aat/update/json?commit=true");
+            var request = GetUpdateRequest("application/json", SolrUrls.UpdateJsonUrl);
 
             SetRequestBody(json, request);
 
             return request;
         }
 
-        private static void SetRequestBody(string csv, HttpWebRequest request, bool useGzip = false)
+        private static void SetRequestBody(string csv, HttpWebRequest request)
         {
             var requestStream = request.GetRequestStream();
             using (var writer = new StreamWriter(requestStream))
@@ -65,11 +65,12 @@ namespace SolrCsvSpike
 
         private static HttpWebRequest GetUpdateRequest(string contentType = "text/xml", string url = null, string method = "POST")
         {
-            url = url ?? @"http://systest-solr-slave00.nix.sys.7d:8080/solr/track-aat/update?commit=true";
+            url = url ?? SolrUrls.UpdateXmlUrl;
 
             var request = (HttpWebRequest) WebRequest.Create(url);
             request.ContentType = contentType;
             request.Method = method;
+            request.Timeout = 1000 * 180;
             
             return request;
         }
@@ -105,21 +106,34 @@ namespace SolrCsvSpike
                     var time = st.ElapsedMilliseconds;
                     var body = GetResponseBody(response);
 
-                    var responseInfo = new ResponseInfo(time, body);
+                    var status = ((HttpWebResponse) response).StatusCode;
+                    if (status != HttpStatusCode.OK)
+                    {
+                        throw new Exception("Bad respnose. Status: " + status);
+                    }
+
+                    var responseInfo = new ResponseInfo(time, GetQTimeFrom(body), body);
 
                     return responseInfo;
                 }
             }
             catch (WebException ex)
             {
-                Console.WriteLine(GetResponseBody(ex.Response));
+                Console.WriteLine("Error: " +ex.Message);
                 throw;
             }
         }
 
+        private static double GetQTimeFrom(string body)
+        {
+            var xml = XDocument.Parse(body);
+
+            return 0.00;
+        }
+
         public static WebRequest GetCsvRemoteUpdateRequest(string fileName)
         {
-            var r = GetUpdateRequest(url: @"http://systest-solr-slave00.nix.sys.7d:8080/solr/track-aat/update/csv?stream.file=" + fileName, method: "GET");
+            var r = GetUpdateRequest(url: SolrUrls.UpdateRemoteCsvUrl + fileName, method: "GET");
 
             return r;
         }

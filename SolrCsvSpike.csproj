@@ -57,6 +57,7 @@
     <Compile Include="Solr.cs" />
     <Compile Include="SolrConverter.cs" />
     <Compile Include="SolrPerfTester.cs" />
+    <Compile Include="SolrUrls.cs" />
     <Compile Include="Track.cs" />
     <Compile Include="TestConsole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

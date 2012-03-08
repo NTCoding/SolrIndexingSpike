@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Solr.cs" />
+    <Compile Include="SolrConverter.cs" />
     <Compile Include="SolrPerfTester.cs" />
     <Compile Include="Track.cs" />
     <Compile Include="TestConsole.cs" />

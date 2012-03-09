@@ -67,7 +67,7 @@ namespace SolrCsvSpike
             Console.WriteLine("***************     Round Trip Times     ***************");
             Console.WriteLine();
            
-            Console.WriteLine("||   Set Size    ||     Xml      ||     Csv      ||     Json     ||");
+            Console.WriteLine("||   Set Size   ||     Xml       ||     Csv      ||     Json     ||");
 
             foreach (var r in results)
             {
@@ -94,12 +94,27 @@ namespace SolrCsvSpike
             Console.WriteLine("***************     Solr QTimes     ***************");
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine("||   Set Size    ||     Xml      ||     Csv      ||     Json     ||");
+            Console.WriteLine("||  Set Size   ||     Xml       ||     Csv      ||     Json     ||");
 
             foreach (var r in results)
             {
                 Console.WriteLine("||     {0}      ||      {1}      ||     {2}     ||     {3}     ||", r.SetSize, r.XmlQTime, r.CsvQTime, r.JsonQTime);
             }
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("*************************************************");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("QTime Averages: Xml = {0}   Csv = {1}   Json = {2}",
+                results.Average(r => r.XmlQTime), results.Average(r => r.CsvQTime), results.Average(r => r.JsonQTime));
+
+            Console.WriteLine();
+            Console.WriteLine("QTime Medians: Xml = {0} Csv = {1} Json = {2}",
+                GetMedian(results.Select(r => r.XmlQTime)), GetMedian(results.Select(r => r.CsvQTime)), GetMedian(results.Select(r => r.JsonQTime)));
+
+            Console.WriteLine();
+            Console.WriteLine("*************************************************");
         }
 
         private double GetMedian(IEnumerable<double> numbers)

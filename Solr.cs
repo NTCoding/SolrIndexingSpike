@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using System.Xml;
 using System.Xml.Linq;
@@ -70,7 +71,7 @@ namespace SolrCsvSpike
             var request = (HttpWebRequest) WebRequest.Create(url);
             request.ContentType = contentType;
             request.Method = method;
-            request.Timeout = 1000 * 180;
+            request.Timeout = 1000 * 320;
             
             return request;
         }
@@ -128,7 +129,14 @@ namespace SolrCsvSpike
         {
             var xml = XDocument.Parse(body);
 
-            return 0.00;
+            var ints = xml.Descendants("int");
+
+            var qtTElement = ints.SingleOrDefault(a => a.Attributes()
+                                                        .Any(x => x.Value == "QTime"));
+
+            if (qtTElement == null) return -1;
+
+            return double.Parse(qtTElement.Value);
         }
 
         public static WebRequest GetCsvRemoteUpdateRequest(string fileName)
